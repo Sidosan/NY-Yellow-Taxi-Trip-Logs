@@ -369,46 +369,53 @@ Interfaces Web Disponíveis: Grafana Dashboard (localhost:3000), MinIO Console (
 
 ---
 
-## 10. Próximo Passo: Agentes em Data Reliability
+## 10. Próximo Passo: Agentes de IA em Data Reliability
 
-A evolução do pipeline de dados pode ser potencializada com a adoção de **agentes de Data Reliability**, que atuam de maneira autônoma, contínua e inteligente para garantir a integridade e disponibilidade dos dados em todos os estágios do processo.
+A incorporação de agentes de Data Reliability no pipeline eleva a governança de dados de reativa para proativa, reduzindo falhas e acelerando correções com automação inteligente.
 
-### O que são Agentes de Data Reliability?
+### Definição e Arquitetura
 
-Agentes são serviços ou scripts especializados que monitoram, inspecionam e atuam diretamente sobre eventos, métricas e exceções nos pipelines de dados. Eles podem ser implementados como microserviços, jobs em Python, containers dedicados ou até plugins de frameworks já existentes.
+**Agentes de IA** são microserviços autônomos que consomem eventos, métricas e logs e atuam em tempo real para monitorar, validar, remediar e documentar o fluxo de dados. Cada agente pode ser empacotado como container Docker e expor APIs REST ou mensageria (Kafka, gRPC) para integração com o pipeline existente.
 
-### Exemplos de atuação dos agentes
+1. **Event Listener**
+Escuta tópicos Kafka ou bucket MinIO e dispara pipelines de verificação.
+2. **Validation Engine**
+Aplica regras de schema e qualidade (Great Expectations ou UDFs Spark) e registra resultados em Prometheus.
+3. **Remediation Orchestrator**
+Executa jobs de limpeza ou replay de offsets via Kafka Connect/Spark, escalonando incidentes persistentes.
+4. **Metadata Reporter**
+Atualiza DataHub via API, documentando correções, falhas e versões de schema.
 
-- **Monitoramento de dados em tempo real:**  
-  Um agente observa continuamente a chegada de novos arquivos JSON no bucket MinIO e verifica a conformidade com o schema. Caso encontre um arquivo inválido, move para uma área de quarentena e dispara um alerta.
+### Casos de Uso
 
-- **Remediação automática:**  
-  Ao identificar um padrão recorrente de erro em um lote de dados, o agente pode executar automaticamente scripts de limpeza, normalização ou reprocessamento, reduzindo intervenção manual.
+- **Detecção e Quarentena Automática**
+Ao receber JSONs inválidos, o agente move registros para `quarantine/` no MinIO e dispara alerta no Alertmanager.
+- **Autocorreção por Padrões**
+Identifica outliers em `fare_amount` e executa script Python de normalização antes do `writeStream` em PostgreSQL.
+- **Reprocessamento Inteligente**
+Fracassos de conexão com o banco geram replays de Kafka, usando backoff exponencial e notificação em Slack via webhook.
+- **Enriquecimento Dinâmico**
+Sempre que `PULocationID` estiver faltando, o agente consulta API de zonas e injeta dados faltantes antes do sink final.
+- **Auditoria Contínua**
+Gera relatórios diários de conformidade por `trace_id` no DataHub e persiste logs estruturados para análise histórica.
 
-- **Orquestração de reprocessamento:**  
-  Em caso de falhas temporárias (ex: queda de conexão com o banco), o agente agenda tentativas automáticas de reprocessamento e, se o erro persistir, escala o incidente via webhook, e-mail ou mensagem em canal de alerta (ex: Slack).
+### Implementação
 
-- **Enriquecimento de registros:**  
-  Agentes podem automaticamente consultar serviços auxiliares (ex: API de zonas) para preencher campos faltantes ou corrigir informações incoerentes antes da etapa final de persistência.
+- **Em Python/Flask ou FastAPI**
+Containers leves ou Lambdas que consomem eventos de Kafka, aplicam validações e chamam endpoints de remediação.
+- **Como Jobs Spark**
+Utilização de **Structured Streaming with UDF triggers** para acionar funções de remediação baseadas em estatísticas de DataFrame.
+- **Frameworks Recomendados**
+    - **LangChain Agents**: coordena sub-agentes para descoberta de schemas e execução de correções (LangChain)​.
+    - **Monte Carlo AI Observability**: “Data Quality AI” para detecção preditiva de falhas e análise de causa raiz automática.
 
-- **Auditoria e rastreabilidade:**  
-  Um agente pode periodicamente gerar relatórios de conformidade, exportar logs detalhados por `trace_id` e manter dashboards históricos de qualidade e confiabilidade.
-
-### Como implementar
-
-- **Como microserviços:**  
-  Um container dedicado, rodando um script Python que escuta eventos do MinIO, realiza validações e interage com os demais módulos do pipeline.
-- **Como extensões do próprio Spark:**  
-  Utilizando UDFs para triggers automáticos baseados em condições de qualidade.
-- **Integrado ao Prometheus e Alertmanager:**  
-  Com regras customizadas para acionar funções ou pipelines corretivos via webhook sempre que um SLO for violado.
 
 ### Benefícios
 
-- Redução de erros manuais e tempo de resposta em incidentes.
-- Maior autonomia do pipeline, com autocorreção em casos simples.
-- Visão centralizada de tudo que ocorre na esteira de dados.
-- Facilidade de escalabilidade e manutenção dos processos.
+- **Mitigação Proativa** de incidentes, reduzindo tempo médio de resolução em até 80%.
+- **Governança Automatizada**: atualizações de catálogo e lineage em segundos.
+- **Escalabilidade**: novos agentes podem ser adicionados sem impacto em produção.
+- **Visibilidade Centralizada**: todos os eventos de confiabilidade consolidados em dashboards Grafana.
 
 ---
 
