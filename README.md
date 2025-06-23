@@ -40,6 +40,8 @@ O JSON Schema Draft-07 define validação para cada tipo de veículo, com Vendor
 ## 2. Arquitetura
 
 A arquitetura implementa seis camadas horizontais, garantindo separação de responsabilidades e escalabilidade.\
+![diagrama](https://github.com/Sidosan/NY-Yellow-Taxi-Trip-Logs/raw/main/img.png)
+
 **Camada 1 - Ingestão**: Simulador Python converte dados Parquet linha-a-linha em JSON streams, gravando no MinIO S3-compatible storage.\
 **Camada 2 - Processamento**: Spark Structured Streaming lê diretamente arquivos JSON do bucket MinIO via protocolo s3a://.\
 **Camada 3 - Armazenamento**: PostgreSQL recebe dados processados com exactly-once semantics.\
