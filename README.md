@@ -47,6 +47,7 @@ A arquitetura implementa seis camadas horizontais, garantindo separação de res
 **Camada 5 - Qualidade**: Great Expectations executa validações inline no Spark.\
 **Camada 6 - Observabilidade**: Stack Prometheus/Grafana/Alertmanager monitora SLIs/SLOs.
 
+
 O Kafka atua apenas como componente opcional de buffering e replay, sem ser requisito para leitura pelo Spark.
 
 ## 3. Simulação Parquet → JSON
