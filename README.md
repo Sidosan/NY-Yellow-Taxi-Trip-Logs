@@ -37,7 +37,7 @@ O JSON Schema Draft-07 define validação para cada tipo de veículo, com Vendor
 }
 ```
 
-## 2. Arquitetura & Diagrama
+## 2. Arquitetura
 
 A arquitetura implementa seis camadas horizontais, garantindo separação de responsabilidades e escalabilidade.\
 **Camada 1 - Ingestão**: Simulador Python converte dados Parquet linha-a-linha em JSON streams, gravando no MinIO S3-compatible storage.\
