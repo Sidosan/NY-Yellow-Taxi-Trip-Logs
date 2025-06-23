@@ -2,7 +2,7 @@
 
 Este documento apresenta uma solução completa de Data Reliability usando exclusivamente ferramentas open-source em Docker Compose para três pipelines JSON em tempo real das bases Yellow, Green e FHV de táxis de Nova Iorque. A arquitetura prioriza Governança e Qualidade de Dados, cobrindo também Confiabilidade, Observabilidade e Rastreabilidade end-to-end.
 
-## 1. Contexto & Documentação
+## 1. Contextualização
 
 Cada pipeline referencia a documentação oficial da NYC Taxi and Limousine Commission (TLC) para extrair campos, tipos e regras de negócio rigorosas. Os dicionários de dados oficiais de março de 2025 incluem Yellow Taxi (23 campos), Green Taxi (com `trip_type` específico) e For-Hire Vehicles (estrutura simplificada com `dispatching_base_num`).
 
