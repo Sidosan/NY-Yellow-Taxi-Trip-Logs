@@ -366,3 +366,77 @@ Interfaces Web Disponíveis: Grafana Dashboard (localhost:3000), MinIO Console (
 
 ---
 
+## 10. Próximo Passo: Agentes em Data Reliability
+
+A evolução do pipeline de dados pode ser potencializada com a adoção de **agentes de Data Reliability**, que atuam de maneira autônoma, contínua e inteligente para garantir a integridade e disponibilidade dos dados em todos os estágios do processo.
+
+### O que são Agentes de Data Reliability?
+
+Agentes são serviços ou scripts especializados que monitoram, inspecionam e atuam diretamente sobre eventos, métricas e exceções nos pipelines de dados. Eles podem ser implementados como microserviços, jobs em Python, containers dedicados ou até plugins de frameworks já existentes.
+
+### Exemplos de atuação dos agentes
+
+- **Monitoramento de dados em tempo real:**  
+  Um agente observa continuamente a chegada de novos arquivos JSON no bucket MinIO e verifica a conformidade com o schema. Caso encontre um arquivo inválido, move para uma área de quarentena e dispara um alerta.
+
+- **Remediação automática:**  
+  Ao identificar um padrão recorrente de erro em um lote de dados, o agente pode executar automaticamente scripts de limpeza, normalização ou reprocessamento, reduzindo intervenção manual.
+
+- **Orquestração de reprocessamento:**  
+  Em caso de falhas temporárias (ex: queda de conexão com o banco), o agente agenda tentativas automáticas de reprocessamento e, se o erro persistir, escala o incidente via webhook, e-mail ou mensagem em canal de alerta (ex: Slack).
+
+- **Enriquecimento de registros:**  
+  Agentes podem automaticamente consultar serviços auxiliares (ex: API de zonas) para preencher campos faltantes ou corrigir informações incoerentes antes da etapa final de persistência.
+
+- **Auditoria e rastreabilidade:**  
+  Um agente pode periodicamente gerar relatórios de conformidade, exportar logs detalhados por `trace_id` e manter dashboards históricos de qualidade e confiabilidade.
+
+### Como implementar
+
+- **Como microserviços:**  
+  Um container dedicado, rodando um script Python que escuta eventos do MinIO, realiza validações e interage com os demais módulos do pipeline.
+- **Como extensões do próprio Spark:**  
+  Utilizando UDFs para triggers automáticos baseados em condições de qualidade.
+- **Integrado ao Prometheus e Alertmanager:**  
+  Com regras customizadas para acionar funções ou pipelines corretivos via webhook sempre que um SLO for violado.
+
+### Benefícios
+
+- Redução de erros manuais e tempo de resposta em incidentes.
+- Maior autonomia do pipeline, com autocorreção em casos simples.
+- Visão centralizada de tudo que ocorre na esteira de dados.
+- Facilidade de escalabilidade e manutenção dos processos.
+
+---
+
+## 11. Fontes e Documentação de Referência
+
+### Dados e Documentação Oficial (NYC TLC)
+
+Fontes centrais que fornecem o acesso aos datasets brutos e os guias oficiais para sua utilização.
+
+- **Portal TLC Trip Record Data**
+    - **Descrição**: Página oficial da NYC Taxi and Limousine Commission que centraliza o acesso a todos os datasets (Yellow, Green, FHV), notícias e atualizações.
+    - **URL**: `https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page`
+- **Guia do Usuário dos Registros de Viagem**
+    - **Descrição**: Documento fundamental que detalha os formatos disponíveis, particularidades sobre a coleta e o significado dos campos.
+    - **URL**: `https://www.nyc.gov/assets/tlc/downloads/pdf/trip_record_user_guide.pdf`
+
+
+### Dicionários de Dados e Enriquecimento
+
+Documentos essenciais para a validação de schemas, definição de tipos de dados, regras de negócio e a implementação das suítes de qualidade de dados.
+
+- **Dicionário de Dados - Yellow Taxi**
+    - **URL**: `https://www.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_yellow.pdf`
+- **Dicionário de Dados - Green Taxi**
+    - **URL**: `https://www.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_green.pdf`
+- **Dicionário de Dados - For-Hire Vehicle (FHV)**
+    - **URL**: `https://www.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_fhv.pdf`
+- **Catálogo de Zonas para Enriquecimento**
+    - **Descrição**: Arquivo CSV utilizado para enriquecer os dados, mapeando `LocationID` para `Borough`, `Zone` e `service_zone`.
+    - **URL**: `https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv`
+
+
+---
+
