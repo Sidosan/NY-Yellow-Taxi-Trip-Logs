@@ -1,4 +1,4 @@
-# Teste Técnico: Entrega de Dados Orientada a Eventos – NYC Taxi
+# Arquitetura de Dados Orientada a Eventos – NYC Taxi
 
 Este documento apresenta uma solução completa de Data Reliability usando exclusivamente ferramentas open-source em Docker Compose para três pipelines JSON em tempo real das bases Yellow, Green e FHV de táxis de Nova Iorque. A arquitetura prioriza Governança e Qualidade de Dados, cobrindo também Confiabilidade, Observabilidade e Rastreabilidade end-to-end.
 
